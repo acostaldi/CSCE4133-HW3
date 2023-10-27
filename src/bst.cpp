@@ -83,6 +83,8 @@ BSTNode* BST::popMaximum() {
         parentNode->right = nullptr;
     }
 
+    std::cout << "Popped Node: " << currentNode->key << std::endl;
+
     return currentNode;
 }
 
@@ -97,7 +99,7 @@ BSTNode* BST::popMinimum() {
     BSTNode* parentNode = nullptr;
     BSTNode* currentNode = this->root;
 
-    while (currentNode->right) {
+    while (currentNode->left != nullptr) {
         parentNode = currentNode;
         currentNode = currentNode->left;
     }
@@ -107,6 +109,8 @@ BSTNode* BST::popMinimum() {
     } else {
         root = currentNode->right;
     }
+
+    std::cout << "Popped Node: " << currentNode->key << std::endl;
     
     return currentNode;
 }
@@ -115,13 +119,20 @@ BSTNode* BST::insertR(BSTNode* node, int key, int meta) {
     if (node == nullptr) {
         return new BSTNode(key, 0, meta, nullptr, nullptr);
     }
-    
+
     if (key < node->key) {
         node->left = insertR(node->left, key, meta);
     } else if (key > node->key) {
         node->right = insertR(node->right, key, meta);
+    } else {
+        // If the key is the same, insert as a child of the current node
+        node->right = insertR(node->right, key, meta);
     }
-    
+
+    int leftHeight = (node->left) ? node->left->height : -1;
+    int rightHeight = (node->right) ? node->right->height : -1;
+    node->height = 1 + std::max(leftHeight, rightHeight);
+
     return node;
 }
 
@@ -176,4 +187,24 @@ BSTNode* BST::removeR(BSTNode* node, int key) {
 BSTNode* BST::remove(int key) {
     root = removeR(root, key);
     return root;
+}
+
+void BST::printLevelOrder() {
+    if (!root)
+        return; // Empty tree
+
+    std::queue<BSTNode*> nodeQueue;
+    nodeQueue.push(root);
+
+    while (!nodeQueue.empty()) {
+        BSTNode* currentNode = nodeQueue.front();
+        nodeQueue.pop();
+
+        std::cout << "Key: " << currentNode->key << " Meta: " << currentNode->meta << " Height: " << currentNode->height << std::endl;
+
+        if (currentNode->left)
+            nodeQueue.push(currentNode->left);
+        if (currentNode->right)
+            nodeQueue.push(currentNode->right);
+    }
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <queue>
 
 struct BSTNode {
     int key;
@@ -8,7 +9,7 @@ struct BSTNode {
     int meta;
     BSTNode *left;
     BSTNode *right;
-
+   
     BSTNode();
     BSTNode(int key, int height = 0, int meta = 0, BSTNode *left = NULL, BSTNode *right = NULL); 
     ~BSTNode();
@@ -29,5 +30,6 @@ class BST {
         BSTNode* popMinimum();
         BSTNode* insert(int key, int meta = 0);
         BSTNode* remove(int key);
+        void printLevelOrder();
 };
 
